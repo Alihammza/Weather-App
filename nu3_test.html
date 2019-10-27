@@ -1,0 +1,101 @@
+ <html>
+     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title> Weather </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <style>
+            .suggesstion-box {
+                border: 1px solid black;
+                width: 158px;
+            }
+        </style>
+     </head>
+
+     <body>
+         <input id="city" />
+         <button id="submit">submit</button>
+         
+         <div>
+          <input type="radio" id="OW" name="weather" value="ow"
+                 checked>
+          <label for="scales">OpenWeather</label>
+        </div>
+
+        <div>
+          <input type="radio" id="WB" name="weather" value="wb">
+          <label for="horns">WeatherBit</label>
+        </div>
+         
+         <div class="weather">
+            
+            <h4>Weather: </h4>
+            <h5>Temperature:</h5>
+            <div id="temp"></div>
+         </div>
+         
+     </body>
+     <script>
+
+      $("#submit").click( function () {
+              
+              var checked='';
+              $.each($("input[name='weather']:checked"), function(){
+                  
+                  checked = $(this).val();
+                
+              });
+          
+              var wb='https://api.weatherbit.io/v2.0/forecast/daily?city='+$('#city').val() + '&units=metric&key=18ddb575af6844c084c56fd064a0748e';
+              var openW='https://api.openweathermap.org/data/2.5/forecast?q=' +$('#city').val() + '&units=metric' + '&appid=b2498c4f66c54350a172a6600e6a745f';
+          
+          var dataFetcher = "";
+          
+          
+              if (checked == 'wb') {
+              
+                  fetch(wb)  
+                      .then(function(resp) { return resp.json() }) // Convert data to json
+                      .then(function(data) {
+                        var temp="";
+                        for (var i=0;i<5;i++)
+                            {
+                                temp = temp +  "<p>" + "Day " + (i+1) + ": "+ data.data[i].temp + 	' &#8451' + "</p>"
+                                $('#temp').html(temp)
+                            }
+                      })
+                      .catch(function() {
+                        // catch any errors
+                      });
+              }
+          
+              else if (checked == 'ow') {
+              
+                  fetch(openW)  
+                      .then(function(resp) { return resp.json() }) // Convert data to json
+                      .then(function(data) {
+                        var temp="";
+                        for (var i=0;i<5;i++)
+                            {
+                                temp = temp +  "<p>" + "Day " + (i+1) + ": "+ data.list[i].main.temp + 	' &#8451' + "</p>"
+                                $('#temp').html(temp)
+                            }
+                      console.log(data)
+                      })
+                      .catch(function() {
+                        // catch any errors
+                      });
+              }
+          
+                });
+          
+      
+    
+
+       
+     </script>
+     
+     
+  </html>
+
